@@ -16,5 +16,6 @@ To install:
 
 - cd temperature-grapher
 - copy .env-example to .env
+- nvm use stable
 - npm install
 - npm start
