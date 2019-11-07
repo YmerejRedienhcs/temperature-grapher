@@ -4,7 +4,11 @@ import express from 'express';
 import sum from './sum.js';
 import callMyFunction from './callMyFunction.js';
 
+import uuidv4 from 'uuid/v4';
+
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 let i = 0;
 
@@ -77,6 +81,19 @@ app.get('/test', (req, res) => {
   i++;
   res.send('Hello Test!'+i.toString()+'\n');
 });
+
+app.post('/messages', (req, res) => {
+  console.log(`debug: req.body is: ${JSON.stringify(req.body, null, 4)}`);
+//  console.log(`debug: req is: ${req}`);
+  const id = uuidv4();
+  const message = {
+    id,
+    text: req.body.text,
+  };
+  messages[id] = message;
+  return res.send(message);
+});
+
 
 console.log('Hello, Project.');
 console.log(process.env.MY_SECRET);
