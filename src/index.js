@@ -9,6 +9,10 @@ import uuidv4 from 'uuid/v4';
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+  req.me = users[1];
+  next();
+})
 
 let i = 0;
 
@@ -82,6 +86,10 @@ app.get('/test', (req, res) => {
   res.send('Hello Test!'+i.toString()+'\n');
 });
 
+app.get('/session', (req, res) => {
+  return res.send(users[req.me.id]);
+});
+
 app.post('/messages', (req, res) => {
   console.log(`debug: req.body is: ${JSON.stringify(req.body, null, 4)}`);
 //  console.log(`debug: req is: ${req}`);
@@ -89,8 +97,20 @@ app.post('/messages', (req, res) => {
   const message = {
     id,
     text: req.body.text,
+    userId: req.me.id
   };
   messages[id] = message;
+  return res.send(message);
+});
+
+app.delete('/messages/:messageId', (req, res) =>{
+  const {
+    [req.params.messageId]: message,
+    ...otherMessages
+  } = messages;
+
+  messages = otherMessages;
+
   return res.send(message);
 });
 
