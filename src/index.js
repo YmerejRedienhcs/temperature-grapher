@@ -8,15 +8,15 @@ import uuidv4 from 'uuid/v4';
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 app.use((req, res, next) => {
   req.me = users[1];
   next();
-})
+});
 
 let i = 0;
 
-let users = {
+const users = {
   1: {
     id: '1',
     username: 'Robin Wieruch',
@@ -34,7 +34,7 @@ let messages = {
   },
   2: {
     id: '2',
-    text: 'By World',
+    text: 'Goodbye World',
     userId: '2',
   },
 };
@@ -66,12 +66,12 @@ app.post('/users', (req, res) => {
 });
 app.put('/users/:userId', (req, res) => {
   return res.send(
-    `PUT HTTP method on user/${req.params.userId} resource`,
+      `PUT HTTP method on user/${req.params.userId} resource`,
   );
 });
 app.delete('/users/:userId', (req, res) => {
   return res.send(
-    `DELETE HTTP method on user/${req.params.userId} resource`,
+      `DELETE HTTP method on user/${req.params.userId} resource`,
   );
 });
 app.get('/messages', (req, res) => {
@@ -92,18 +92,18 @@ app.get('/session', (req, res) => {
 
 app.post('/messages', (req, res) => {
   console.log(`debug: req.body is: ${JSON.stringify(req.body, null, 4)}`);
-//  console.log(`debug: req is: ${req}`);
+  //  console.log(`debug: req is: ${req}`);
   const id = uuidv4();
   const message = {
     id,
     text: req.body.text,
-    userId: req.me.id
+    userId: req.me.id,
   };
   messages[id] = message;
   return res.send(message);
 });
 
-app.delete('/messages/:messageId', (req, res) =>{
+app.delete('/messages/:messageId', (req, res) => {
   const {
     [req.params.messageId]: message,
     ...otherMessages
@@ -114,6 +114,7 @@ app.delete('/messages/:messageId', (req, res) =>{
   return res.send(message);
 });
 
+app.update('/messages/:messageId', (req, res) => {});
 
 console.log('Hello, Project.');
 console.log(process.env.MY_SECRET);
